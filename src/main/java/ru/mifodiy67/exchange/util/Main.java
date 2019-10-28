@@ -21,12 +21,12 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        String fileName = "";
-        String eventName = "";
-        if (args.length > 0) {
+        String fileName = "2.txt";
+        String eventName = "ORDER";
+        /*if (args.length > 0) {
             fileName = args[0];
             eventName = args[1];
-        }
+        }*/
 
         ParsingFile service = new ParsingFile();
         List<StatisticInfo> list = service.parsing(fileName);

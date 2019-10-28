@@ -40,8 +40,7 @@ public class ParsingFile {
         Map<Integer, Long> finalMap = new TreeMap<>();
         result.entrySet().stream()
                 .filter(e -> eventName.equals(e.getKey().getTransactionName()))
-                .sorted(Map.Entry.<StatisticInfo, Long>comparingByValue()
-                        .reversed()).forEachOrdered(e -> finalMap.put(e.getKey().getCallTime(), e.getValue()));
+                .forEachOrdered(e -> finalMap.put(e.getKey().getCallTime(), e.getValue()));
         return finalMap;
     }
 }
