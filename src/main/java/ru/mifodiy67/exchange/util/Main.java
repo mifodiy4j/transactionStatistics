@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static ru.mifodiy67.exchange.util.ExchangeConst.FIRST_BORDER_VALUE;
@@ -30,9 +32,15 @@ public class Main {
 
         ParsingFile service = new ParsingFile();
         List<StatisticInfo> list = service.parsing(fileName);
-        Map<Integer, Long> eventStatistics = service.getEventStatistics(list, eventName);
+        Map<Integer, Long> samplesMap = service.getEventStatistics(list, eventName);
+        int samplesCount = samplesMap.size();
+        int index = (samplesCount % 2 != 0 ? (samplesCount - 1) / 2 : samplesCount % 2);
+        int medianaValue = (Integer) samplesMap.keySet().toArray()[index];
 
-        Iterator<Map.Entry<Integer, Long>> iterator = eventStatistics.entrySet().iterator();
+        Random random = new Random();
+        double gaus = random.nextGaussian();
+
+        Iterator<Map.Entry<Integer, Long>> iterator = samplesMap.entrySet().iterator();
         int minBorder = 0;
         int numberOfRecords = list.size();
         long count = 0;
@@ -77,6 +85,7 @@ public class Main {
         System.out.println(result);
 
         OrderDao orderDao = new OrderDao();
+        orderDao.createTable();
         orderDao.saveAll(totalInfoSet);
     }
 }

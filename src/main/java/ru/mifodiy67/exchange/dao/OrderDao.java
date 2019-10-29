@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
 
 import static ru.mifodiy67.exchange.util.ExchangeConst.DB_URL;
@@ -15,8 +16,32 @@ import static ru.mifodiy67.exchange.util.ExchangeConst.USER;
 
 public class OrderDao {
 
+    private static final String DROP_TABLE = "DROP TABLE IF EXISTS INFO";
+    private static final String CREATE_TABLE = "CREATE TABLE INFO (" +
+            "EXEC_TIME INTEGER NOT NULL," +
+            "TRANS_NO INTEGER NOT NULL," +
+            "WEIGHT NUMERIC(5, 2) NOT NULL," +
+            "PERCENT NUMERIC(5, 2) NOT NULL)";
     private static final String SAVE_ORDERS =
             "INSERT INTO INFO(EXEC_TIME, TRANS_NO, WEIGHT, PERCENT) VALUES (?, ?, ?, ?)";
+
+    public void createTable() throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = connection.createStatement()) {
+
+            try {
+                stmt.execute(DROP_TABLE);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            stmt.execute(CREATE_TABLE);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void saveAll(Set<TotalInfo> totalInfoSet) throws ClassNotFoundException {
         Class.forName(JDBC_DRIVER);
